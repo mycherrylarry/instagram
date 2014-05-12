@@ -1,0 +1,12 @@
+@(photos: List[Photo])
+@photos.map {photo =>
+<article data-id="id-1" data-type="javascript html" class="front-folio">
+  <span>
+    <img src="/assets/resources/photo/@photo.contributer/small_@(photo.hash).@(photo.suffix)" alt="photo">
+    <div>
+      <a href="/assets/resources/photo/@photo.contributer/@(photo.hash).@(photo.suffix)" class="p-view" data-rel="prettyPhoto" rel="prettyPhoto"></a>
+      <a href="/photo/@photo.id" class="p-link"></a>
+    </div>
+  </span>
+</article>
+}

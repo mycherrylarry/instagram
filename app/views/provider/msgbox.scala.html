@@ -1,0 +1,6 @@
+@(msgboxes: List[Msgbox])
+@msgboxes.map { msgbox =>
+<li>
+  <a onclick="deleteMsg(@msgbox.id)" href="/photo/@msgbox.photo_id">NEW photo: @msgbox.photo_id</a>
+</li>
+}

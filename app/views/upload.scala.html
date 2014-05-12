@@ -1,0 +1,117 @@
+@(message: String, user_id : String)
+
+@main("Welcome to Play 2.1") {
+    <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/imgareaselect-animated.css")">
+    <script type="text/javascript" src="@routes.Assets.at("javascripts/jquery.imgareaselect.pack.js")"></script>
+
+    <!-- for glfx -->
+    <script type="text/javascript" src="@routes.Assets.at("javascripts/glfx.js")"></script>
+    <script type="text/javascript" src="@routes.Assets.at("javascripts/jquery.ui.slider.js")"></script>
+    <!-- end for glfx -->
+
+    <script type="text/javascript">
+      function preview(img, selection) {
+        if (!selection.width || !selection.height)
+        return;
+
+        $('#x1').val(selection.x1);
+        $('#y1').val(selection.y1);
+        $('#w').val(selection.width);
+        $('#h').val(selection.height);    
+      }
+
+      function initCrop() {
+        $('#img_placeholder').imgAreaSelect({ aspectRatio: '4:3', handles: true,
+          fadeSpeed: 200, onSelectChange: preview });
+      }
+    </script>
+
+    <script>
+      function convertImageToCanvas(image) {
+        var canvas = document.createElement("canvas");
+        var x1 = document.getElementById("x1").value;
+        var y1 = document.getElementById("y1").value;
+        var w = document.getElementById("w").value;
+        var h = document.getElementById("h").value;
+        canvas.width = w;
+        canvas.height = h;
+        canvas.getContext("2d").drawImage(image,
+        x1,
+        y1,
+        w,
+        h,
+        0,0,w,h
+        );
+
+        return canvas;
+      }
+
+      function convertCanvasToImage(canvas) {
+        var image = new Image();
+        image.src = canvas.toDataURL("image/png");
+        return image;
+      }
+
+      function createImage() {
+        $('#img_placeholder').imgAreaSelect({hide:true});
+        var filter_canvas = document.getElementById("canvas_placeholder");
+        var filter_image = new Image();
+        var data  = filter_canvas.toDataURL("image/png");
+        filter_image.src = data;
+
+        var name = prompt("Please enter name: ", "photo name");
+        
+
+        var result_canvas = convertImageToCanvas(filter_image);
+        var image_data  = result_canvas.toDataURL("image/png");
+        
+        $.post("/upload/do",
+        {
+          image_name: name,
+          image_data: image_data
+        },
+        function(data, status){
+          window.location.href="/management";
+        }
+        );
+
+        /*
+        // remove canvas
+        var div = document.getElementById('canvas_placeholder');
+        div.style.visibility='hidden';
+        div.parentNode.removeChild(div);
+        $('#imagediv').empty();
+        document.getElementById("imagediv").appendChild(result_canvas);
+        */
+      }
+    </script>
+
+    <div class="span12">
+      <div id="imagediv" style="position:absolute; z-index:2;"></div>
+      <span id="placeholder" style="position:absolute; z-index:-1;"></span>
+	    <div id="photo"></div>
+    </div>
+
+    <div class="span12">
+
+      <input type='hidden' id='x1' value='0'></input>
+      <input type='hidden' id='y1' value='0'></input>
+      <input type='hidden' id='w'></input>
+      <input type='hidden' id='h'></input>
+
+      <table id="properties"><tbody><tr>
+        <th>Filter: </th>
+        <td><select id="filters"></select></td>
+        </tr>
+      </tbody>
+      </table>
+
+      <button onclick="createImage()">next</button>
+    </div>
+}
+
+	<script src="@routes.Assets.at("javascripts/filereader.min.js")"></script>
+	<script src="@routes.Assets.at("javascripts/caman.full.js")"></script>
+	<script src="@routes.Assets.at("javascripts/jquery.mousewheel.min.js")"></script>
+  <script src="@routes.Assets.at("javascripts/filter.js")"></script>
+	<script src="@routes.Assets.at("javascripts/script.js")"></script>

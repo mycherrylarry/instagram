@@ -1,0 +1,33 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET     /                           controllers.Application.index
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.at(path="/public", file)
+
+# Account
+GET     /profile/:id                controllers.Application.profile(id: Int)
+GET     /auth/:auth_id              controllers.Account.auth(auth_id: String)
+GET     /logout                     controllers.Account.logout
+GET     /management             controllers.Application.management
+POST    /profile/update             controllers.Application.profileUpdate
+GET     /user/list                  controllers.Application.userList
+
+# Photo
+GET     /photo/:id                  controllers.Application.photo(id: Int)
+GET     /upload                     controllers.Application.upload
+POST    /upload/do                     controllers.Application.uploadDo
+
+# Relationship
+GET     /rel/follow/:follower/:followee controllers.Relationship.follow(follower :Int, followee: Int)
+GET     /rel/unfollow/:follower/:followee controllers.Relationship.unfollow(follower :Int, followee: Int)
+GET     /rel/like/:user_id/:photo_id controllers.Relationship.like(user_id :Int, photo_id: Int)
+GET     /rel/unlike/:user_id/:photo_id controllers.Relationship.unlike(user_id :Int, photo_id: Int)
+
+# Provider
+GET     /provider/photoall/:offset/:limit     controllers.Provider.photoAll(offset: Int, limit: Int)
+GET     /provider/msgbox/:auth_id             controllers.Provider.msgbox(auth_id: String)
+GET     /delete/msgbox/:id                    controllers.Provider.msgboxDel(id: Int)

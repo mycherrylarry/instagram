@@ -1,0 +1,24 @@
+@(message: String, users: List[User])
+
+@main("Welcome to Play 2.1") {
+
+<div class="">
+  <ul class="comment-list" id="comment-list-ul">
+    @users.map {user =>
+    <li class="comment">
+      <div class="comment-body row-fluid">
+        <div class="span2">
+          <a href="/profile/@user.id">
+            <img class="img-polaroid" src="http://graph.facebook.com/@user.auth_id/picture"></img>
+          </a>
+        </div>
+        <div class="span9 pull-right">
+          <h4 class="comment-heading">Name: @user.name</h4>
+          <p>@user.desc</p>
+        </div>
+      </div>
+    </li>
+    }
+  </ul>
+</div>
+}

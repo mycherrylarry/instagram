@@ -1,0 +1,72 @@
+@(title: String)(content: Html)
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>@title</title>
+  <link href="@routes.Assets.at("stylesheets/bootstrap.css")" type="text/css" rel="stylesheet">
+  <link href="@routes.Assets.at("stylesheets/bootstrap-custom-grid.css")" type="text/css" rel="stylesheet">
+  <link href="@routes.Assets.at("stylesheets/style.css")" type="text/css" rel="stylesheet">
+  <link href="@routes.Assets.at("stylesheets/prettyPhoto.css")" type="text/css" rel="stylesheet">
+  <link href="@routes.Assets.at("stylesheets/app.css")" type="text/css" rel="stylesheet">
+
+  <script type="text/javascript" src="@routes.Assets.at("javascripts/jquery.min.js")"></script>
+</head>
+
+<body>
+  <div id="fb-root"></div>
+  <div class="navbar navbar-inverse">
+    <div class="navbar-inner">
+      <div class="container">
+        <a class="brand" href="/">Instagram</a>
+        <ul class="nav">
+          <li>
+            <a href="/user/list">user_list</a>
+          </li>
+          <li>
+            <a href="/upload">upload</a>
+          </li>
+          <li class="dropdown" id = "nav_dropdown_notification">
+            <a href="#" class="dropdown-toggle" data-toggle = "dropdown">
+              Notification
+              <b class="caret"></b>
+            </a>
+          </li>
+        </ul>
+        <div class="nav-collapse navbar-inverse-collapse collapse">
+          <div class="navbar input-append pull-right">
+            <a id="hello-user" style="visibility:hidden" class="btn" type="text">xxxxxx</a>
+            <button id="fb-logout" class="btn btn-primary" style="visibility:hidden" onclick="
+            FB.logout(function(response) {
+              authLogout();
+              });
+            ">logout</button>
+	          <fb:login-button id="fb-login" size="large" show-faces="false" width="200" max-rows="1"></fb:login-button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<div class="container content">
+  @content
+</div>
+
+<!--footer menu-->
+<section id="footer-menu">
+  <div class="row">
+    <p class="span6 pull-right">Copyright © 2013.  All rights reserved. </p>
+  </div>
+</section>
+
+  <script type="text/javascript" src="@routes.Assets.at("javascripts/glfx.js")"></script>
+  <script type="text/javascript" src="@routes.Assets.at("javascripts/jquery.ui.slider.js")"></script>
+  <script type="text/javascript" src="@routes.Assets.at("javascripts/main.js")"></script>
+
+  <script type="text/javascript" src="@routes.Assets.at("javascripts/bootstrap.min.js")"></script>
+  <script type="text/javascript" src="@routes.Assets.at("javascripts/jquery.hoverdir.js")"></script>
+  <script type="text/javascript" src="@routes.Assets.at("javascripts/jquery.prettyPhoto.js")"></script>
+
+
+</body>
+</html>

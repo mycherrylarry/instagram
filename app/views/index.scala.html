@@ -1,0 +1,65 @@
+@(message: String, photos: List[Photo])
+
+@main("Welcome to Play 2.1") {
+<script>
+  var offset = 12;
+  function show_more() {
+    var photo_section = document.getElementById("photo_section");
+    var xmlhttp;
+    if (window.XMLHttpRequest) {
+      xmlhttp = new XMLHttpRequest();
+    } else {
+      xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    xmlhttp.onreadystatechange=function() {
+      if(xmlhttp.readyState==4 && xmlhttp.status==200) {
+        var inner = photo_section.innerHTML;
+        photo_section.innerHTML = inner + xmlhttp.responseText;
+        offset += 4;
+      }
+    }
+    xmlhttp.open('GET', "/provider/photoall/" + offset + "/" + "4");
+    xmlhttp.send();
+  }
+
+  function test() {
+    var newArticle = document.createElement("article");
+    newArticle.setAttribute('data-type', 'javascript html');
+    newArticle.setAttribute('class', 'front-folio');
+    newArticle.setAttribute('data-id', 'id-1');
+    var newSpan = document.createElement("span");
+    var newImg = document.createElement("img");
+    newImg.setAttribute('src', 'http://worldsoccertalk.com/wp-content/uploads/2011/02/the_fa.jpg');
+    var newDiv = document.createElement("div");
+    var newA1 = document.createElement("a");
+    var newA2 = document.createElement("a");
+    newA1.setAttribute('href', '#');
+    newA1.setAttribute('class', 'p-view');
+    newA1.setAttribute('data-rel', 'prettyPhoto');
+    newA1.setAttribute('rel', 'prettyPhoto');
+    newA2.setAttribute('href', '#');
+    newA2.setAttribute('class', 'p-link');
+
+    newDiv.appendChild(newA1);
+    newDiv.appendChild(newA2);
+    newSpan.appendChild(newImg);
+    newSpan.appendChild(newDiv);
+    newArticle.appendChild(newSpan);
+
+    document.getElementById("photo_section").appendChild(newArticle);
+  }
+</script>
+  <section class="da-thumbs portfolio filtrable clearfix" id="photo_section">
+  @photos.map { photo => 
+    <article data-id="id-1" data-type="javascript html" class="front-folio">
+      <span>
+        <img src="/assets/resources/photo/@photo.contributer/small_@(photo.hash).@(photo.suffix)" alt="photo">
+        <div>
+          <a href="/assets/resources/photo/@photo.contributer/@(photo.hash).@(photo.suffix)" class="p-view" data-rel="prettyPhoto" rel="prettyPhoto"></a>
+          <a href="/photo/@photo.id" class="p-link"></a>
+        </div>
+      </span>
+    </article>
+  }
+  </section>
+}

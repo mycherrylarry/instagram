@@ -1,0 +1,121 @@
+@(message: String, photo: Photo, owner: User, liked: Boolean, cur_user_id: Int)
+
+@main("Welcome to Play 2.1") {
+
+<script>
+  function like_photo(photo_id) {
+    if(@cur_user_id == -1) {
+      alert("please login");
+      return
+    }
+    var xmlhttp;
+    if (window.XMLHttpRequest) {
+      xmlhttp = new XMLHttpRequest();
+    } else {
+      xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    xmlhttp.onreadystatechange=function() {
+      if(xmlhttp.readyState==4 && xmlhttp.status==200) {
+        alert("liked photo ");
+        var bt = document.getElementById("like_button");
+        bt.setAttribute("onclick", "unlike_photo("+photo_id+")");
+        bt.setAttribute("id", "unlike_button");
+        bt.setAttribute("class", "btn btn-danger")
+        bt.value = "unlike";
+      }
+    }
+    xmlhttp.open('GET', "/rel/like/" + @cur_user_id + "/" + photo_id);
+    xmlhttp.send();
+  }
+  
+  function unlike_photo(photo_id) {
+    var xmlhttp;
+    if (window.XMLHttpRequest) {
+      xmlhttp = new XMLHttpRequest();
+    } else {
+      xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    xmlhttp.onreadystatechange=function() {
+      if(xmlhttp.readyState==4 && xmlhttp.status==200) {
+        alert("unliked photo ");
+        var bt = document.getElementById("unlike_button");
+        bt.setAttribute("onclick", "like_photo("+photo_id+")");
+        bt.setAttribute("id", "like_button");
+        bt.setAttribute("class", "btn btn-primary")
+        bt.value = "like";
+      }
+    }
+    xmlhttp.open('GET', "/rel/unlike/" + @cur_user_id + "/" + photo_id);
+    xmlhttp.send();
+  }
+
+  function postToFeed() {
+    var obj = {
+      method: 'feed' ,
+      link: '',
+      name: 'Instagram',
+      description: 'Share picture with your friends.'
+    };
+
+    function callback(response) {
+    }
+
+    FB.ui(obj, callback);
+  }
+
+</script>
+
+    <div class="span6">
+    <article class="blog-post">
+      <div class="img-block">
+        <span class="img-w-border">
+          <img src="/assets/resources/photo/@photo.contributer/@(photo.hash).@(photo.suffix)">
+        <span>
+        <ul class="submeta clearfix">
+          <li class="date">@photo.c_time</li>
+          <li class="like">@photo.like_num</li>
+          <li class="comm">1255</li>
+        </ul>
+      </div>
+      <div class="row-fluid">
+        <div class="span6">
+          @if(liked) {
+          <input type="button" onclick="unlike_photo(@photo.id)" id="unlike_button" class="btn btn-danger" value="unlike"></input>
+          }else{
+          <input type="button" onclick="like_photo(@photo.id)" id="like_button" class="btn btn-primary" value="like"></input>
+          }
+        </div>
+        <div class="span1 pull-right">
+          <a class="last" href="#" onclick="postToFeed()"><img title="facebook" alt="Facebook" src="@routes.Assets.at("images/facebook(1).png")"></img></a>
+        </div>
+      </div>
+    </article>
+    </div>
+    <div class="span3">
+      <ul class="comment-list" id="comment-list-ul">
+        <li class="comment">
+          <div class="comment-body row-fluid">
+            <div class="span4">
+              <a href="/profile/@owner.id">
+                <img class="img-polaroid" src="http://graph.facebook.com/@owner.auth_id/picture"></img>
+              </a>
+            </div>
+            <div class="span8">
+              <h4 class="comment-heading">@owner.name</h4>
+            </div>
+          </div>
+        </li>
+      </ul>
+      <hr>
+      <h2>Photo Info</h2>
+      <div class="input-prepend">
+        <span class="add-on">Name</span>
+        <input class="" type ="text" value="@photo.name" disabled/>
+      </div>
+      <div class="input-prepend">
+        <span class="add-on">Desc&nbsp&nbsp</span>
+        <input class="" type ="text" value="@photo.desc" disabled/>
+      </div>
+    </div>
+
+}

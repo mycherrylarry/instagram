@@ -1,0 +1,171 @@
+@(message: String, user: User, photos:List[Photo], followed: Boolean, followers:List[User], cur_user_id: Int)
+@import helper._
+
+@main("Welcome to Play 2.1") {
+<script>
+  function validateFileExtension(component, extns) {
+    var flag=0;
+    with(component) {
+      var ext = value.substring(value.lastIndexOf('.') + 1);
+      ext = ext.toLowerCase();
+      for (i=0; i<extns.length; i++) {
+        if(ext==extns[i]) {
+          return true;
+        }
+      }
+      return false;
+    }
+  }
+
+  function validation(thisform) {
+    with(thisform) {
+      if(validateFileExtension(fileUpload, 
+      new Array(
+        "jpg", "jpeg",
+        "png"
+      )) == false){
+        document.getElementById("file-unfit").innerHTML=
+          "Not a validate file, please upload the following types: jpg, jpeg, png ";
+        return false;
+      }
+      document.getElementById("button-upload").disabled = true;
+    }
+  }
+</script>
+
+<script>
+  function follow_user(user_id) {
+    if(@cur_user_id == -1) {
+      alert("please login");
+      return
+    }
+    var xmlhttp;
+    if (window.XMLHttpRequest) {
+      xmlhttp = new XMLHttpRequest();
+    } else {
+      xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    xmlhttp.onreadystatechange=function() {
+      if(xmlhttp.readyState==4 && xmlhttp.status==200) {
+        alert("followed user ");
+        var bt = document.getElementById("follow_button");
+        bt.setAttribute("onclick", "unfollow_user("+user_id+")");
+        bt.setAttribute("id", "unfollow_button");
+        bt.setAttribute("class", "btn btn-danger")
+        bt.value = "unfollow";
+      }
+    }
+    xmlhttp.open('GET', "/rel/follow/" + @cur_user_id + "/" + user_id);
+    xmlhttp.send();
+  }
+  
+  function unfollow_user(user_id) {
+    var xmlhttp;
+    if (window.XMLHttpRequest) {
+      xmlhttp = new XMLHttpRequest();
+    } else {
+      xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    xmlhttp.onreadystatechange=function() {
+      if(xmlhttp.readyState==4 && xmlhttp.status==200) {
+        alert("unfollowed user ");
+        var bt = document.getElementById("unfollow_button");
+        bt.setAttribute("onclick", "follow_user("+user_id+")");
+        bt.setAttribute("id", "follow_button");
+        bt.setAttribute("class", "btn btn-primary")
+        bt.value = "follow";
+      }
+    }
+    xmlhttp.open('GET', "/rel/unfollow/" + @cur_user_id + "/" + user_id);
+    xmlhttp.send();
+  }
+</script>
+
+<div class="span3">
+  <ul class="thumbnails">
+    <li>
+    <div class="thumbnail">
+      <img class="" src="http://graph.facebook.com/@user.auth_id/picture?width=200&height=200" alt="">
+      <div class="caption">
+        <h3>Name</h3>
+        <p>
+          <div class="input-prepend">
+            <span class="add-on"></span>
+            <input class="" type="text" disabled id="user_name" value="@user.name"></input>
+          </div>
+        </p>
+        <hr>
+        <h3>Email</h3>
+          <div class="input-prepend">
+            <span class="add-on"></span>
+            <input class="" type="text" disabled id="user_email" value="@user.email"></input>
+          </div>
+        <hr>
+        <h3>Description</h3>
+          <div class="input-prepend">
+            <span class="add-on"></span>
+            <input class="" type="text" readonly id="user_desc" value="@user.desc"></input>
+          </div>
+        <hr>
+        <div>
+          @if(followed) {
+          <input type="button" onclick="unfollow_user(@user.id)" id="unfollow_button" class="btn btn-danger" value="unfollow"></input>
+          }else{
+          <input type="button" onclick="follow_user(@user.id)" id="follow_button" class="btn btn-primary" value="follow"></input>
+          }
+        </div>
+      </div>
+    </div>
+    </li>
+  </ul>
+</div>
+<div class="span6">
+  <div class="tabbable">
+    <ul class="nav nav-tabs">
+      <li class="active"><a href="#tab1" data-toggle="tab">photo</a></li>
+      <li><a href="#tab2" data-toggle="tab">followers</a></li>
+      <li><a href="#tab3" data-toggle="tab">following</a></li>
+    </ul>
+    <div class="tab-content">
+      <div class="tab-pane active" id="tab1">
+        <div class="row-fluid">
+          @photos.map { photo =>
+          <ul class="thumbnails span6">
+            <li>
+            <div class="thumbnail">
+              <a href="/photo/@photo.id">
+                <img src="/assets/resources/photo/@photo.contributer/small_@(photo.hash).@(photo.suffix)" style="width: 360px;height:200px">
+              </a>
+              <div class="caption">
+                <h3>@photo.name</h3>
+              </div>
+            </div>
+            </li>
+          </ul>
+          }
+        </div>
+      </div>
+      <div class="tab-pane" id="tab2">
+        @followers.map { follower =>
+        <table>
+          <tr>
+            <td class="span3">
+              <a href="/profile/@follower.id"><img src="http://graph.facebook.com/@follower.auth_id/picture"></a>
+            </td>
+            <td class="span6">
+              <p>Name : @follower.name</p>
+              <p>Email: @follower.email</p>
+            </td>
+          </tr>
+        </table>
+        }
+      </div>
+      <div class="tab-pane" id="tab3">
+        11
+      </div>
+    </div>
+  </div>
+</div>
+
+
+}
